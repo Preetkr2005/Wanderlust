@@ -2,7 +2,12 @@
 <body>
   <div class="row offset-3">
     <div class="col-8">
-      <form method="post" action="/listings/<%= Listing.id%>?_method=Put">
+      <form
+        method="post"
+        action="/listings/<%= Listing.id%>?_method=Put"
+        novalidate
+        class="needs-validation"
+      >
         <br /><br />
         <h1>Edit listing</h1>
         <div class="md-3">
@@ -12,7 +17,9 @@
             name="title"
             value="<%= Listing.title %>"
             class="form-control"
+            required
           />
+        
         </div>
         <div class="md-3">
           <label for="description">Description</label>
@@ -22,9 +29,11 @@
             cols="25"
             class="form-control"
             rows="10"
+            required
           >
 <%=Listing.description%> </textarea
           >
+          <div class="invalid-feedback">Enter the short discription</div>
         </div>
         <div class="md-3">
           <label for="image">Image</label>
@@ -33,7 +42,9 @@
             name="image"
             value="<%= Listing.image %>"
             class="form-control"
+            required
           />
+          <div class="invalid-feedback">Enter the valid image-link</div>
         </div>
         <div class="md-3">
           <label for="price">Price</label>
@@ -42,7 +53,9 @@
             name="price"
             value="<%= Listing.price %>"
             class="form-control"
+            required
           />
+          <div class="invalid-feedback">Enter the valid Price</div>
         </div>
         <div class="md-3">
           <label for="location">Location</label>
@@ -51,7 +64,9 @@
             name="location"
             value="<%=Listing.location %>"
             class="form-control"
+            required
           />
+          <div class="invalid-feedback">Enter valid Location</div>
         </div>
         <div class="md-3">
           <label for="country">Country</label>
@@ -60,7 +75,9 @@
             name="country"
             value="<%= Listing.country %>"
             class="form-control"
+            required
           />
+          <div class="invalid-feedback">Enter valid Country name</div>
         </div>
         <br />
         <br />

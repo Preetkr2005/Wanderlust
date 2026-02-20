@@ -1,10 +1,11 @@
 <%- layout("/layouts/boilerplate") %>
 <body>
+    <br>    
     <h3>All Listings</h3>
     <!-- <form action="/listings/new" method="get">
         <button>Create listing</button>
     </form> -->
-
+    <br>
     <div class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-2">
     <% for(let listing of allListings) { %>
         <a href="/listing/<%=listing.id%>" class="listing-links">
@@ -22,6 +23,4 @@
 </a>
 <% } %>
 </div>
-
-
 </body>
