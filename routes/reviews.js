@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router({mergeParams: true});
+const router = express.Router({ mergeParams: true });
 const Review = require("../models/Review.js");
 const AsyncWrap = require("../utils/AsyncWrap.js");
 const ExpressError = require("../utils/ExpressError.js");
@@ -36,6 +36,7 @@ router.post(
 
     //save that review data in listing collection
     await Ourlisting.save();
+    req.flash("success", "New review Created!")
 
     res.redirect(`/listings/${Ourlisting._id}`);
   }),
@@ -46,11 +47,9 @@ router.delete(
   "/:reviewId",
   AsyncWrap(async (req, res) => {
     let { reviewId, id } = req.params;
-
     await listing.findByIdAndUpdate(id, { $pull: { review: reviewId } });
-
     await Review.findByIdAndDelete(reviewId);
-
+    req.flash("success", "review Deleted!");
     res.redirect(`/listings/${id}`);
   }),
 );
