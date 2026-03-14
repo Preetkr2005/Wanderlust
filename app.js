@@ -8,9 +8,14 @@ const ExpressError = require("./utils/ExpressError.js");
 const session = require("express-session");
 const flash = require("connect-flash");
 const ConnectDB = require("./config/db.js");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const User = require("./models/User.js");
 
-const listings = require("./routes/listings.js");
-const reviews = require("./routes/reviews.js");
+const listingsRouter = require("./routes/listings.js");
+const reviewsRouter = require("./routes/reviews.js");
+const userRouter = require("./routes/User.js")
+const { serialize } = require("v8");
 
 ConnectDB;
 
@@ -34,14 +39,22 @@ app.use(
 app.use(flash());
 // expire date of data which is user used during the login
 
-app.use((req,res,next) => {
+app.use(passport.initialize()); // this initialize passport
+app.use(passport.session()); // this is helps to use passport as a session
+
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
-  next()
-})
+  next();
+});
 
-app.use("/listings", listings);
-app.use("/listing/:id/reviews", reviews);
+app.use("/listings", listingsRouter);
+app.use("/listing/:id/reviews", reviewsRouter);
+app.use("/", userRouter);
 
 app.all(/.*/, (req, res, next) => {
   next(new ExpressError(404, "page not found"));
