@@ -4,6 +4,7 @@ const listing = require("../models/listing.js");
 const AsyncWrap = require("../utils/AsyncWrap.js");
 const ExpressError = require("../utils/ExpressError.js");
 const { listingSchema, reviewSchema } = require("../schema.js");
+const {isloggedin} = require("../middleware/loggedIn.js");
 
 // using joi as a middleware, validation function for listing on server side
 const validateListing = (req, res, next) => {
@@ -25,13 +26,14 @@ router.get(
 );
 
 // New Route
-router.get("/new", (req, res) => {
+router.get("/new", isloggedin, (req, res) => {
   res.render("listings/new.ejs");
 });
 
 // edit route
 router.get(
   "/:id/edit",
+  isloggedin,
   AsyncWrap(async (req, res) => {
     let { id } = req.params;
     const Listing = await listing.findById(id);
@@ -44,6 +46,7 @@ router.get(
 );
 router.put(
   "/:id",
+  isloggedin,
   validateListing,
   AsyncWrap(async (req, res) => {
     const { id } = req.params;
@@ -54,7 +57,7 @@ router.put(
 
 // Add route
 router.post(
-  "/",
+  "/",isloggedin,
   validateListing,
   AsyncWrap(async (req, res, next) => {
     const newListing = new listing(req.body.listing);
@@ -81,6 +84,7 @@ router.get(
 // Delete Route
 router.delete(
   "/:id",
+  isloggedin,
   AsyncWrap(async (req, res) => {
     const { id } = req.params;
     const DeleteListing = await listing.findByIdAndDelete(id);

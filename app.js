@@ -14,7 +14,7 @@ const User = require("./models/User.js");
 
 const listingsRouter = require("./routes/listings.js");
 const reviewsRouter = require("./routes/reviews.js");
-const userRouter = require("./routes/User.js")
+const userRouter = require("./routes/User.js");
 const { serialize } = require("v8");
 
 ConnectDB;
@@ -49,6 +49,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
+  res.locals.currUser = req.user;
   next();
 });
 
