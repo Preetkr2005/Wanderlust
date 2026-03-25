@@ -7,15 +7,16 @@
     <div class="card col-6 offset-3 mt-3 show-card lisitng-card">
       <img src="<%= Listing.image %>" class="card-img-top show-img" alt="..." />
       <div class="card-body">
-        &#8377; <%= Listing.price.toLocaleString("en-IN")%> <br />
-        <%= Listing.description %>
-        <br />
-        <%= Listing.location %>
-        <br />
-        <%= Listing.country %>
+       <p class="card-text"><i>owned by <%= Listing.owner.username %></i></p>
+        <p class="card-text">&#8377; <%= Listing.price.toLocaleString("en-IN")%></p>
+        <p class="card-text"><%= Listing.description %></p>
+        <p class="card-text"><%= Listing.location %></p>
+        <p class="card-text"><%= Listing.country %></p>
       </div>
     </div>
   </div>
+  <% if(currUser._id.equals(Listing.owner._id)) { %>
+    <% // current user id and listing owner id is same so user can delete the posts or edit them %>
   <div class="btns">
     <a
       href="/listings/<%=Listing.id%>/edit"
@@ -27,6 +28,7 @@
       <button class="btn btn-dark offset-5">Delete</button>
     </form>
   </div>
+  <% } %>
   <br />
   <div class="col-8 offset-3 mb-3">
     <hr />
@@ -49,7 +51,7 @@
         />
       </div>
       <div class="mb-3 mt-3">
-        <label for="comment" class="form-label">Comment</label> 
+        <label for="comment" class="form-label">Comment</label>
         <textarea
           name="Review[Comment]"
           id="Comment"
