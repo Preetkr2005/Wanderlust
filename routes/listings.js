@@ -4,7 +4,7 @@ const listing = require("../models/listing.js");
 const AsyncWrap = require("../utils/AsyncWrap.js");
 const ExpressError = require("../utils/ExpressError.js");
 const { listingSchema, reviewSchema } = require("../schema.js");
-const {isloggedin} = require("../middleware/loggedIn.js");
+const { isloggedin, isOwner } = require("../middleware/middleware.js");
 
 // using joi as a middleware, validation function for listing on server side
 const validateListing = (req, res, next) => {
@@ -34,6 +34,7 @@ router.get("/new", isloggedin, (req, res) => {
 router.get(
   "/:id/edit",
   isloggedin,
+  isOwner,
   AsyncWrap(async (req, res) => {
     let { id } = req.params;
     const Listing = await listing.findById(id);
@@ -44,9 +45,12 @@ router.get(
     res.render("listings/edit.ejs", { Listing });
   }),
 );
+
+// update route
 router.put(
   "/:id",
   isloggedin,
+  isOwner,
   validateListing,
   AsyncWrap(async (req, res) => {
     const { id } = req.params;
@@ -57,7 +61,8 @@ router.put(
 
 // Add route
 router.post(
-  "/",isloggedin,
+  "/",
+  isloggedin,
   validateListing,
   AsyncWrap(async (req, res, next) => {
     const newListing = new listing(req.body.listing);
@@ -73,7 +78,10 @@ router.get(
   "/:id",
   AsyncWrap(async (req, res) => {
     let { id } = req.params;
-    const Listing = await listing.findById(id).populate("Review").populate("owner");
+    const Listing = await listing
+      .findById(id)
+      .populate({ path: "Review", populate: { path: "author" } })
+      .populate("owner");
     if (!Listing) {
       req.flash("error", "Listing you requested for does not exist");
       return res.redirect("/listings");
@@ -86,6 +94,7 @@ router.get(
 router.delete(
   "/:id",
   isloggedin,
+  isOwner,
   AsyncWrap(async (req, res) => {
     const { id } = req.params;
     const DeleteListing = await listing.findByIdAndDelete(id);

@@ -1,4 +1,4 @@
- const mongoose = require("mongoose")
+const mongoose = require("mongoose")
 const {Schema} = require("mongoose");
 
 const ReviewSchema = new Schema({
@@ -13,6 +13,10 @@ const ReviewSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now(),
+    },
+    author: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
     }
 })
 
