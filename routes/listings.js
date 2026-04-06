@@ -3,8 +3,9 @@ const router = express.Router();
 const listing = require("../models/listing.js");
 const AsyncWrap = require("../utils/AsyncWrap.js");
 const ExpressError = require("../utils/ExpressError.js");
-const { listingSchema, reviewSchema } = require("../schema.js");
+const { listingSchema } = require("../schema.js");
 const { isloggedin, isOwner } = require("../middleware/middleware.js");
+const listingController = require("../Controllers/listing.js");
 
 // using joi as a middleware, validation function for listing on server side
 const validateListing = (req, res, next) => {
@@ -17,33 +18,17 @@ const validateListing = (req, res, next) => {
 };
 
 // index route
-router.get(
-  "/",
-  AsyncWrap(async (req, res) => {
-    const allListings = await listing.find({});
-    res.render("listings/index.ejs", { allListings });
-  }),
-);
+router.get("/", AsyncWrap(listingController.Index));
 
 // New Route
-router.get("/new", isloggedin, (req, res) => {
-  res.render("listings/new.ejs");
-});
+router.get("/new", isloggedin, listingController.RenderNewForm);
 
 // edit route
 router.get(
   "/:id/edit",
   isloggedin,
   isOwner,
-  AsyncWrap(async (req, res) => {
-    let { id } = req.params;
-    const Listing = await listing.findById(id);
-    if (!Listing) {
-      req.flash("error", "Listing you requested for does not exist");
-      return res.redirect("/listings");
-    }
-    res.render("listings/edit.ejs", { Listing });
-  }),
+  AsyncWrap(listingController.Editlisitng),
 );
 
 // update route
@@ -52,11 +37,7 @@ router.put(
   isloggedin,
   isOwner,
   validateListing,
-  AsyncWrap(async (req, res) => {
-    const { id } = req.params;
-    await listing.findByIdAndUpdate(id, { ...req.body });
-    res.redirect(`/listings/${id}`);
-  }),
+  AsyncWrap(listingController.Updatelisting),
 );
 
 // Add route
@@ -64,44 +45,18 @@ router.post(
   "/",
   isloggedin,
   validateListing,
-  AsyncWrap(async (req, res, next) => {
-    const newListing = new listing(req.body.listing);
-    newListing.owner = req.user._id;
-    await newListing.save();
-    req.flash("success", "New listing is created");
-    res.redirect("/listings");
-  }),
+  AsyncWrap(listingController.Addlisting),
 );
 
 // Show route
-router.get(
-  "/:id",
-  AsyncWrap(async (req, res) => {
-    let { id } = req.params;
-    const Listing = await listing
-      .findById(id)
-      .populate({ path: "Review", populate: { path: "author" } })
-      .populate("owner");
-    if (!Listing) {
-      req.flash("error", "Listing you requested for does not exist");
-      return res.redirect("/listings");
-    }
-    res.render("listings/show.ejs", { Listing });
-  }),
-);
+router.get("/:id", isloggedin, AsyncWrap(listingController.Showlisting));
 
 // Delete Route
 router.delete(
   "/:id",
   isloggedin,
   isOwner,
-  AsyncWrap(async (req, res) => {
-    const { id } = req.params;
-    const DeleteListing = await listing.findByIdAndDelete(id);
-    console.log(DeleteListing);
-    req.flash("success", "Listing Deleted!");
-    res.redirect("/listings");
-  }),
+  AsyncWrap(listingController.Deletelisting),
 );
 
 module.exports = router;
