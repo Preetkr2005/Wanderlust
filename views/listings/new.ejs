@@ -8,6 +8,7 @@
         method="post"
         novalidate
         class="needs-validation"
+        enctype="multipart/form-data"
       >
         <h3>Create new listing</h3>
         <div class="mb-3">
@@ -34,10 +35,11 @@
           ></textarea>
           <div class="invalid-feedback">Enter vaild Discription</div>
         </div>
-        <div class="mb-3">
-          <label for="image" class="form-label">Image</label>
+        
+          <div class="mb-3">
+          <label for="image" class="form-label">Upload Listing Image</label>
           <input
-            type="text"
+            type="file"
             name="listing[image]"
             placeholder="enter image link/url"
             class="form-control"

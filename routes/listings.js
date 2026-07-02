@@ -6,6 +6,9 @@ const ExpressError = require("../utils/ExpressError.js");
 const { listingSchema } = require("../schema.js");
 const { isloggedin, isOwner } = require("../middleware/middleware.js");
 const listingController = require("../Controllers/listing.js");
+const multer = require("multer");
+const {storage} = require("../cloudConfig.js")
+const upload = multer({storage});
 
 // using joi as a middleware, validation function for listing on server side
 const validateListing = (req, res, next) => {
@@ -44,6 +47,7 @@ router.put(
 router.post(
   "/",
   isloggedin,
+  upload.single("listing[image]"),
   validateListing,
   AsyncWrap(listingController.Addlisting),
 );
