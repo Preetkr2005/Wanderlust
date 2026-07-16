@@ -1,4 +1,7 @@
 const listing = require("../models/listing");
+const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding")
+const mapToken = process.env.MAP_TOKEN;
+const geocodingClient = mbxGeocoding({accessToken: mapToken})
 
 const Index = async (req, res) => {
   const allListings = await listing.find({});
@@ -29,22 +32,45 @@ const Editlisitng = async (req, res) => {
     req.flash("error", "Listing you requested for does not exist");
     return res.redirect("/listings");
   }
-  res.render("listings/edit.ejs", { Listing });
+
+  let originalImageUrl = Listing.image.url
+  originalImageUrl = originalImageUrl.replace("/upload","/uplaod/w_250")
+  res.render("listings/edit.ejs", { Listing, originalImageUrl});
 };
 
 const Updatelisting = async (req, res) => {
   const { id } = req.params;
-  await listing.findByIdAndUpdate(id, { ...req.body });
+  let Listing = await listing.findByIdAndUpdate(id, { ...req.body });
+
+  if(typeof req.file !== "undefined"){
+  let url = req.file.path;
+  let filename = req.file.filename;
+  Listing.image = {url, filename}
+  await listing.save()
+  }
+
+  req.flash("success", "Listing updated")
   res.redirect(`/listings/${id}`);
 };
 
 const Addlisting = async (req, res, next) => {
+
+  let response = await geocodingClient
+  .forwardGeocode({
+    query: req.body.Listing.location,
+    limit: 1,
+  })
+  .send();
+
   let url = req.file.path;
   let filename = req.file.filename;
-  const newListing = new listing(req.body.listing);
-  newListing.image = {url, filename}
+  const newListing = new listing(req.body.Listing);
+  newListing.image = { url, filename };
   newListing.owner = req.user._id;
-  await newListing.save();
+
+  newListing.geometry = response.body.features[0].geometry
+
+  let savedListing = await newListing.save();
   req.flash("success", "New listing is created");
   res.redirect("/listings");
 };

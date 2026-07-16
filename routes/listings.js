@@ -39,6 +39,7 @@ router.put(
   "/:id",
   isloggedin,
   isOwner,
+  upload.single("listing[image]"),
   validateListing,
   AsyncWrap(listingController.Updatelisting),
 );

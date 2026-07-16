@@ -5,8 +5,8 @@ body {
   min-height: 100vh;
 }
 
-.error{
-    padding-top: 5%;
+.error {
+  padding-top: 5%;
 }
 
 .container {
@@ -117,4 +117,9 @@ body {
 .show-card {
   padding-left: 0;
   padding-right: 0;
+}
+
+#map {
+  height: 400px;
+  width: 80vh;
 }
