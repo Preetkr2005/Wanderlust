@@ -21,6 +21,7 @@ const listingsRouter = require("./routes/listings.js");
 const reviewsRouter = require("./routes/reviews.js");
 const userRouter = require("./routes/User.js");
 const { serialize } = require("v8");
+const { saveRedirectUrl } = require("./middleware/middleware.js");
 
 ConnectDB;
 
@@ -55,7 +56,6 @@ const sessionOptions = {
   },
 };
 
-
 app.use(session(sessionOptions));
 app.use(flash());
 // expire date of data which is user used during the login
@@ -72,6 +72,10 @@ app.use((req, res, next) => {
   res.locals.error = req.flash("error");
   res.locals.currUser = req.user;
   next();
+});
+
+app.get("/", (req, res) => {
+  res.redirect("/listings");
 });
 
 app.use("/listings", listingsRouter);
