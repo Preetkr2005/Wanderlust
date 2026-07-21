@@ -2,3 +2,4 @@ node_modules
 .prettierrc
 classroom
 .env
+**/.DS_Store

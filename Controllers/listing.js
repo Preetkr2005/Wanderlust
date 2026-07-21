@@ -34,7 +34,7 @@ const Editlisitng = async (req, res) => {
   }
 
   let originalImageUrl = Listing.image.url
-  originalImageUrl = originalImageUrl.replace("/upload","/uplaod/w_250")
+  originalImageUrl = originalImageUrl.replace("/upload","/upload/w_250")
   res.render("listings/edit.ejs", { Listing, originalImageUrl});
 };
 
@@ -46,7 +46,7 @@ const Updatelisting = async (req, res) => {
   let url = req.file.path;
   let filename = req.file.filename;
   Listing.image = {url, filename}
-  await listing.save()
+  await Listing.save()
   }
 
   req.flash("success", "Listing updated")
@@ -57,14 +57,14 @@ const Addlisting = async (req, res, next) => {
 
   let response = await geocodingClient
   .forwardGeocode({
-    query: req.body.Listing.location,
+    query: req.body.listing.location,
     limit: 1,
   })
   .send();
 
   let url = req.file.path;
   let filename = req.file.filename;
-  const newListing = new listing(req.body.Listing);
+  const newListing = new listing(req.body.listing);
   newListing.image = { url, filename };
   newListing.owner = req.user._id;
 

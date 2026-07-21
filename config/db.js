@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
-MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+// const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+
+const ATLAS_URL = process.env.ATLASDB_URL;
 
 const connectDB = main()
   .then(() => {
@@ -10,7 +12,7 @@ const connectDB = main()
   });
 
 async function main() {
-  await mongoose.connect(MONGO_URL);
+  await mongoose.connect(ATLAS_URL);
 }
 
 module.exports = connectDB;
