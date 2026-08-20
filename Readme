@@ -1,10 +1,345 @@
- //   type: String,
-  //   default:
-  //     "https://images.unsplash.com/photo-1580741186862-c5d0bf2aff33?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+# Wanderlust
 
-  //   set: (v) =>
-  //     v === ""
-  //       ? "https://images.unsplash.com/photo-1580741186862-c5d0bf2aff33?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-  //       : v, // we use set for set a default image if somone not pass the value or image in the image section
+Wanderlust is an Airbnb-inspired full-stack web application where users can explore, create, edit, and manage property listings.
 
-// this is from listing to model for save default image on listing 
+The project was built to practice full-stack web development, REST APIs, authentication, database management, image uploads, geocoding, and deployment.
+
+## Live Demo
+
+**Live Application:**
+https://wanderlust-ztub.onrender.com
+
+> Note: The application is deployed on Render. The server may take some time to start if it has been inactive.
+
+## Features
+
+### User Authentication
+
+* User signup and login
+* Authentication for protected routes
+* Session-based authentication
+* Users can manage their own listings
+
+### Listings
+
+* View all available listings
+* View individual listing details
+* Create a new listing
+* Edit existing listings
+* Delete listings
+* Add listing images
+
+### Reviews
+
+* Users can add reviews to listings
+* Display reviews on listing pages
+* Delete reviews when permitted
+
+### Location & Maps
+
+* Location search and geocoding
+* Map integration using Mapbox
+* Store listing coordinates using GeoJSON
+* Display listing location on the map
+
+### Image Upload
+
+* Image upload using Multer
+* Cloudinary integration for cloud image storage
+
+### Validation & Error Handling
+
+* Server-side validation
+* Custom error handling
+* Protected routes
+* User authorization
+
+---
+
+## Tech Stack
+
+### Frontend
+
+* HTML
+* CSS
+* Bootstrap
+* EJS
+* JavaScript
+
+### Backend
+
+* Node.js
+* Express.js
+
+### Database
+
+* MongoDB
+* Mongoose
+
+### Authentication
+
+* Passport.js
+* Express-session
+
+### APIs & Services
+
+* Mapbox
+* Cloudinary
+
+### Deployment & Tools
+
+* Render
+* Git
+* GitHub
+* Postman / Thunder Client
+
+---
+
+## Project Architecture
+
+The application follows a typical MVC-style architecture.
+
+User
+ │
+ ▼
+EJS Views
+ │
+ ▼
+Express Routes
+ │
+ ▼
+Controllers
+ │
+ ▼
+Models / Mongoose
+ │
+ ▼
+MongoDB
+
+Additional services:
+
+Image Upload
+     │
+     ▼
+   Multer
+     │
+     ▼
+ Cloudinary
+
+
+Location
+   │
+   ▼
+Mapbox Geocoding
+   │
+   ▼
+GeoJSON Coordinates
+
+Project Structure
+
+Wanderlust/
+│
+├── controllers/
+│
+├── init/
+│
+├── models/
+│
+├── public/
+│   ├── css/
+│   └── js/
+│
+├── routes/
+│
+├── utils/
+│
+├── views/
+│   ├── layouts/
+│   ├── listings/
+│   ├── users/
+│   └── includes/
+│
+├── middleware.js
+├── app.js
+├── schema.js
+├── package.json
+├── package-lock.json
+└── README.md
+
+Environment Variables
+
+Create a `.env` file in the root directory.
+
+```env
+ATLASDB_URL=your_mongodb_connection_string
+
+SECRET=your_session_secret
+
+MAP_TOKEN=your_mapbox_token
+
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_KEY=your_cloudinary_key
+CLOUDINARY_SECRET=your_cloudinary_secret
+```
+
+Do not upload your `.env` file to GitHub.
+
+---
+
+## Installation & Setup
+
+### 1. Clone the repository
+
+git clone <your-github-repository-url>
+
+2. Navigate into the project
+
+cd Wanderlust
+
+### 3. Install dependencies
+
+npm install
+
+### 4. Create environment variables
+
+Create a `.env` file and add the required credentials.
+
+### 5. Start the application
+
+node app.js
+
+Or, if you have a development script:
+
+npm run dev
+
+### 6. Open in browser
+
+http://localhost:8080
+
+
+## Authentication & Authorization
+
+Wanderlust uses session-based authentication.
+
+The authentication flow is:
+
+```text
+User Login
+    ↓
+Passport.js
+    ↓
+Verify Credentials
+    ↓
+Create Session
+    ↓
+Session Cookie
+    ↓
+Authenticated Requests
+```
+
+Authorization is used to make sure users can only modify resources they are allowed to manage.
+
+---
+
+## Mapbox Integration
+
+Mapbox is used for location-based functionality.
+
+When a listing is created:
+
+```text
+Listing Location
+      ↓
+Mapbox Geocoding
+      ↓
+Latitude / Longitude
+      ↓
+GeoJSON Coordinates
+      ↓
+MongoDB
+      ↓
+Map Display
+```
+
+This allows listings to be displayed at their corresponding geographic locations.
+
+---
+
+## Cloudinary Integration
+
+Cloudinary is used to store listing images.
+
+The upload flow is:
+
+```text
+User
+ ↓
+Image Upload
+ ↓
+Multer
+ ↓
+Cloudinary
+ ↓
+Image URL
+ ↓
+MongoDB Listing
+```
+
+This keeps image storage separate from the application server.
+
+---
+
+## What I Learned
+
+This project helped me gain practical experience with:
+
+* Building RESTful APIs
+* Node.js and Express.js
+* MongoDB and Mongoose
+* MVC architecture
+* Authentication and authorization
+* Sessions and cookies
+* Middleware
+* CRUD operations
+* Error handling
+* Form validation
+* Image uploads
+* Cloudinary
+* Mapbox and geocoding
+* GeoJSON
+* Git and GitHub
+* Deployment using Render
+* Connecting frontend views with backend APIs
+
+---
+
+## 🎯 Future Improvements
+
+Some possible improvements for future versions:
+
+* Add advanced listing search and filtering
+* Add pagination
+* Improve responsive UI
+* Add booking functionality
+* Add user profiles
+* Add favorites/wishlist
+* Improve map functionality
+* Add automated testing
+* Improve performance and security
+
+---
+
+## 👨‍💻 Author
+
+**Preet Kumar**
+
+BCA – Full Stack Development
+
+Interested in **Backend Development, REST APIs, Databases and Software Engineering**.
+
+---
+
+## 🌐 Live Project
+
+**Wanderlust:**
+https://wanderlust-ztub.onrender.com
